@@ -90,6 +90,7 @@ export default {
   img.logo {
     width: 34px;
     height: 34px;
+    z-index: 1;
   }
 
   .menu {
