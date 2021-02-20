@@ -1,20 +1,28 @@
 <template>
-  <div class="my-autocomplete">
+  <div class="my-autocomplete" :class="value ? '' : 'dark-mode'">
     <div class="input-wrapper">
       <input
-        v-model="searchText"
+        @input="debounceInput"
         type="text"
         placeholder="Try Vietnam"
         :style="isDropdown ? 'border-radius: 4px 4px 0px 0px;' : ''"
       />
-      <img class="search-icon" src="/img/search.png" alt="" />
+      <img
+        class="search-icon"
+        :src="`/img/search${value ? '' : '-dark'}.png`"
+        alt=""
+      />
       <div class="dropdown-list" v-show="isDropdown">
         <div
           class="dropdown-item"
           v-for="(prov, index) of filteredProvinces"
           :key="prov.noaccent"
-          :style="index+1 === filteredProvinces.length ? 'margin-bottom: 0;' : ''"
-        >{{ prov.fullname }}</div>
+          :style="
+            index + 1 === filteredProvinces.length ? 'margin-bottom: 0;' : ''
+          "
+        >
+          {{ prov.fullname }}
+        </div>
       </div>
     </div>
   </div>
@@ -22,10 +30,16 @@
 
 <script>
 import provinces from "../assets/data.js";
+import _ from "lodash";
 export default {
   name: "NavBar",
   components: {},
-  props: {},
+  props: {
+    value: {
+      type: Boolean,
+      default: true,
+    },
+  },
   mounted() {
     this.provinces = JSON.parse(JSON.stringify(provinces));
     this.provinces = this.provinces.map((x) => ({
@@ -36,7 +50,7 @@ export default {
   data() {
     return {
       searchText: "",
-      isDropdown: true,
+      isDropdown: false,
       provinces: [],
     };
   },
@@ -66,6 +80,9 @@ export default {
       str = str.replace(/\s/g, "");
       return str.toLowerCase();
     },
+    debounceInput: _.debounce(function (e) {
+      this.searchText = e.target.value;
+    }, 500),
   },
   computed: {
     filteredProvinces() {
@@ -98,6 +115,22 @@ export default {
 .my-autocomplete {
   text-align: center;
   margin: 170px auto;
+  &.dark-mode {
+    & .input-wrapper {
+      input {
+        color: #cdcdcd;
+        background: #0e0e0e;
+        border: 1px solid #565656;
+      }
+    }
+    & .dropdown-list {
+      background: #1b1b1b !important;
+      border: 1px solid #565656 !important;
+      .dropdown-item {
+        color: #cdcdcd;
+      }
+    }
+  }
   .input-wrapper {
     position: relative;
     display: inline-block;
@@ -146,7 +179,7 @@ export default {
       line-height: 21px;
       color: #484848;
       .dropdown-item {
-          margin-bottom: 20px;
+        margin-bottom: 20px;
       }
     }
   }

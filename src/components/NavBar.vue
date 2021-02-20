@@ -6,27 +6,34 @@
     <div class="menu">
       <div class="switch">
         <el-switch
-          v-model="lightMode"
+          @change="$emit('changeMode')"
+          v-model="mode"
           active-color="#555555"
           inactive-color="#555555"
           :active-value="true"
           :inactive-value="false"
         >
         </el-switch>
+
         <img
-          :class="lightMode ? 'hide' : ''"
+          :class="mode ? 'hide' : ''"
           class="sunny"
           src="/img/sunny-icon.svg"
           alt=""
         />
         <img
-          :class="!lightMode ? 'hide' : ''"
+          :class="!mode ? 'hide' : ''"
           class="night"
           src="/img/night-icon.svg"
           alt=""
         />
       </div>
-      <div class="nav-items" v-for="item of navItems" :key="item.link" @click="$router.push(`/${item.link}`)">
+      <div
+        class="nav-items"
+        v-for="item of navItems"
+        :key="item.link"
+        @click="$router.push(`/${item.link}`)"
+      >
         {{ item.description }}
       </div>
     </div>
@@ -40,10 +47,15 @@ export default {
   components: {
     ElSwitch: Switch,
   },
-  props: {},
+  props: {
+    lightMode: {
+      type: Boolean,
+      default: true,
+    },
+  },
   data() {
     return {
-      lightMode: true,
+      mode: this.lightMode,
       navItems: [
         {
           link: "host",
@@ -64,11 +76,8 @@ export default {
       ],
     };
   },
-  watch: {
-    lightMode(nVal) {
-      console.log(nVal);
-    },
-  },
+  methods: {},
+  watch: {},
 };
 </script>
 
@@ -78,14 +87,18 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  img {
-    width: 34px;
-    height: 34px;
+  a {
+    z-index: 1;
+    img {
+      width: 34px;
+      height: 34px;
+    }
   }
   .menu {
     display: flex;
     align-items: center;
     justify-content: space-evenly;
+    z-index: 1;
     .switch {
       position: relative;
       margin-right: 36px;
