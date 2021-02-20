@@ -21,7 +21,7 @@
           :style="
             index + 1 === filteredProvinces.length ? 'margin-bottom: 0;' : ''
           "
-          @click="chooseProvince($event, prov.fullname)"
+          @click="chooseProvince(prov.fullname)"
         >
           {{ prov.fullname }}
         </div>
@@ -89,9 +89,7 @@ export default {
     debounceInput: _.debounce(function (e) {
       this.searchText = e.target.value;
     }, 500),
-    chooseProvince(e, name) {
-      console.log(e);
-      e.preventDefault();
+    chooseProvince(name) {
       this.searchText = name;
       this.isDropdown = false;
     },
@@ -117,14 +115,10 @@ export default {
     filteredProvinces: {
       deep: true,
       handler(nVal) {
-        console.log("run", nVal);
         if (nVal.length > 0) return (this.isDropdown = true);
         return (this.isDropdown = false);
       },
-    },
-    isDropdown(nVal) {
-      console.log("dropdown: ", nVal);
-    },
+    }
   },
 };
 </script>
