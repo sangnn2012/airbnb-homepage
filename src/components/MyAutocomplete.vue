@@ -3,6 +3,7 @@
     <div class="input-wrapper">
       <input
         @input="debounceInput"
+        v-model="searchText"
         type="text"
         placeholder="Try Vietnam"
         :style="isDropdown ? 'border-radius: 4px 4px 0px 0px;' : ''"
@@ -20,6 +21,7 @@
           :style="
             index + 1 === filteredProvinces.length ? 'margin-bottom: 0;' : ''
           "
+          @click="chooseProvince($event, prov.fullname)"
         >
           {{ prov.fullname }}
         </div>
@@ -31,9 +33,13 @@
 <script>
 import provinces from "../assets/data.js";
 import _ from "lodash";
+import ClickOutside from "vue-click-outside";
 export default {
   name: "NavBar",
   components: {},
+  directives: {
+    ClickOutside,
+  },
   props: {
     value: {
       type: Boolean,
@@ -83,10 +89,22 @@ export default {
     debounceInput: _.debounce(function (e) {
       this.searchText = e.target.value;
     }, 500),
+    chooseProvince(e, name) {
+      console.log(e);
+      e.preventDefault();
+      this.searchText = name;
+      this.isDropdown = false;
+    },
   },
   computed: {
     filteredProvinces() {
-      if (this.searchText.length === 0) {
+      let choseText = false;
+      this.provinces.forEach((prov) => {
+        if (prov.fullname === this.searchText) {
+          choseText = true;
+        }
+      });
+      if (this.searchText.length === 0 || choseText) {
         return [];
       }
       const searchTerm = this.removeAccents(this.searchText);
@@ -154,10 +172,12 @@ export default {
     }
     img {
       width: 26px;
+      height: auto;
       position: absolute;
       left: 21px;
       top: 50%;
       transform: translateY(-50%);
+      z-index: 1;
     }
     .dropdown-list {
       width: 100%;
@@ -171,15 +191,39 @@ export default {
       top: 100%;
       text-align: left;
       padding: 30px 20px;
-
       font-family: Roboto;
       font-style: normal;
       font-weight: normal;
       font-size: 18px;
       line-height: 21px;
       color: #484848;
+
+      max-height: 40vh;
+      overflow-y: scroll;
       .dropdown-item {
         margin-bottom: 20px;
+      }
+    }
+  }
+}
+@media only screen and (max-width: 768px) {
+  .my-autocomplete {
+    .input-wrapper {
+      width: 80%;
+      input {
+        padding: 15px 15px 15px 45px;
+        font-size: 15px;
+      }
+      img {
+        width: 20px;
+        left: 15px;
+      }
+      .dropdown-list {
+        font-size: 14px;
+        padding: 10px 15px;
+        .dropdown-item {
+          margin: 10px;
+        }
       }
     }
   }

@@ -1,8 +1,7 @@
 <template>
   <div class="nav">
-    <a href="/">
-      <img src="/img/airbnb.png" alt="" />
-    </a>
+    <img class="logo" src="/img/airbnb.png" alt="" />
+
     <div class="menu">
       <div class="switch">
         <el-switch
@@ -87,13 +86,12 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  a {
-    z-index: 1;
-    img {
-      width: 34px;
-      height: 34px;
-    }
+
+  img.logo {
+    width: 34px;
+    height: 34px;
   }
+
   .menu {
     display: flex;
     align-items: center;
@@ -112,6 +110,7 @@ export default {
         top: 50%;
         transform: translateY(-50%);
         transition-duration: all 0.2s ease-in-out;
+        z-index: 1;
       }
       .night {
         position: absolute;
@@ -121,6 +120,7 @@ export default {
         top: 50%;
         transform: translateY(-50%);
         transition-duration: all 0.2s ease-in-out;
+        z-index: 1;
       }
       .hide {
         display: none;
@@ -135,6 +135,15 @@ export default {
       color: #ffffff;
       margin-right: 36px;
       cursor: pointer;
+    }
+  }
+}
+@media only screen and (max-width: 768px) {
+  .nav {
+    .menu {
+      .nav-items {
+        display: none;
+      }
     }
   }
 }
